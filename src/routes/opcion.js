@@ -92,7 +92,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             nuevaOpcion.save((err,nOpcion)=>{
                 if(err) return res.status(500).json({mensaje:"Error interno en servidor al guardar opcion: " + err,status:false})
                 res.json({
-                    opcion: nuevaOpcion,
+                    opcion: nOpcion,
                     status: true
                 });
             });
