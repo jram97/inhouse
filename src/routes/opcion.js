@@ -69,7 +69,9 @@ router.post("/ws/opciones", [auth], async (req, res) => {
     const icon = req.files.icono;
 
 
-    cloudinary.uploader.upload_stream((err,result) =>{
+    cloudinary.uploader.upload_stream({
+        public_id: "inhouse/"
+    },(err,result) =>{
         if (err) return res.status(500).json({
             mensaje: "Error interno en servidor al subir imagen: ",
             status: false
@@ -79,7 +81,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             nombre,
             step,
             descripcion,
-            icono: result.secure_url,
+            icono: result.url,
             precio
         });
         nuevaOpcion.save((err,nOpcion)=>{
