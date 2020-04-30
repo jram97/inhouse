@@ -72,12 +72,11 @@ router.post("/ws/opciones", [auth], async (req, res) => {
     cloudinary.uploader.upload_stream({
         folder: "inhouse"
     },(err,result) =>{
-        console.log(err)
         if (err) return res.status(500).json({
             mensaje: "Error interno en servidor al subir imagen: ",
             status: false
         })
-
+        console.log(result)
         const nuevaOpcion = new Opcion({
             nombre,
             step,
@@ -102,29 +101,19 @@ router.put("/ws/opciones", [auth], async (req, res) => {
         try {
             const { id, step, nombre, precio, descripcion } = req.body;
             const icon = req.files.icono;
-            /*let nombreCortado = icon.name.split(".");
-            let extension = nombreCortado[nombreCortado.length - 1];
-
-            if (extension == "jpg" || extension == "png" || extension == "PNG" || extension == "JPG" || extension == "JPGE" || extension == "jpeg") {
-                const getImagen = await Opcion.findOne({ _id: id });
-                borraImagen(getImagen.icono);
-                let img = `/imagenes/rootsInhouseSV-${new Date().getMilliseconds()}${new Date().getSeconds()}.${extension}`;
-                icon.mv(path.join(__dirname, "../public/" + img), (err) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });*/
-
-            cloudinary.uploader.upload(icon,{public_id:"inhouse/"},(error,result)=> {
-                if (error) return res.status(500).json({
-                    mensaje: "Error interno en servidor al subir imagen: " + err,
+            cloudinary.uploader.upload_stream({
+                folder: "inhouse"
+            },(err,result) =>{
+                if (err) return res.status(500).json({
+                    mensaje: "Error interno en servidor al subir imagen: ",
                     status: false
                 })
+                console.log(result)
                 tOpcion = {
                     nombre,
                     step,
                     descripcion,
-                    icono: result.secure_url,
+                    icono: result.url,
                     precio
                 }
                 Opcion.findByIdAndUpdate(id, tOpcion, (err, uOpcion) => {
@@ -137,7 +126,7 @@ router.put("/ws/opciones", [auth], async (req, res) => {
                         status: true
                     });
                 })
-            })
+            }).end(icon.data)
 
         } catch (err) {
             res.json({
