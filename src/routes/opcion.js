@@ -70,7 +70,6 @@ router.post("/ws/opciones", [auth], async (req, res) => {
 
 
     cloudinary.uploader.upload_stream({
-        resource_type: 'raw',
         folder: "inhouse"
     },(err,result) =>{
         console.log(err)
