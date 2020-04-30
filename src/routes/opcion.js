@@ -70,8 +70,6 @@ router.post("/ws/opciones", [auth], async (req, res) => {
 
 
     cloudinary.uploader.upload_stream((err,result) =>{
-        console.log(icon)
-        console.log(err)
         if (err) return res.status(500).json({
             mensaje: "Error interno en servidor al subir imagen: ",
             status: false
@@ -91,7 +89,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
                 status: true
             });
         });
-    }).end(icon.buffer)
+    }).end(icon.data)
 
 
 });
