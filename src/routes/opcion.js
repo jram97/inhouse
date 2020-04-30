@@ -113,7 +113,7 @@ router.put("/ws/opciones", [auth], async (req, res) => {
         try {
             const { id, step, nombre, precio, descripcion } = req.body;
             const icon = req.files.icono;
-            let nombreCortado = icon.name.split(".");
+            /*let nombreCortado = icon.name.split(".");
             let extension = nombreCortado[nombreCortado.length - 1];
 
             if (extension == "jpg" || extension == "png" || extension == "PNG" || extension == "JPG" || extension == "JPGE" || extension == "jpeg") {
@@ -124,24 +124,31 @@ router.put("/ws/opciones", [auth], async (req, res) => {
                     if (err) {
                         console.log(err);
                     }
-                });
-                const opcionActualizada = await Opcion.findByIdAndUpdate(id, {
+                });*/
+
+            cloudinary.uploader.upload(icon,{public_id:"inhouse/"},(error,result)=> {
+                if (error) return res.status(500).json({
+                    mensaje: "Error interno en servidor al subir imagen: " + err,
+                    status: false
+                })
+                tOpcion = {
                     nombre,
                     step,
                     descripcion,
-                    icono: img,
+                    icono: result.secure_url,
                     precio
+                }
+                Opcion.findByIdAndUpdate(id, tOpcion, (err, uOpcion) => {
+                    if (error) return res.status(500).json({
+                        mensaje: "Error interno en servidor al editar opcion: " + err,
+                        status: false
+                    })
+                    res.json({
+                        opcion: uOpcion,
+                        status: true
+                    });
                 })
-                res.json({
-                    opcion: opcionActualizada,
-                    status: true
-                });
-            } else {
-                res.json({
-                    mensaje: "Formato de imagen no soportado",
-                    status: false
-                });
-            }
+            })
 
         } catch (err) {
             res.json({
