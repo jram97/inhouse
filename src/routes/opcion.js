@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 const Opcion = require("../model/Opcion");
 const { auth } = require("../lib/util");
-const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: 'dxmoev2hb',
     api_key: '644335251315747',
@@ -66,8 +66,8 @@ router.get("/ws/opciones/:id", async (req, res) => {
 router.post("/ws/opciones", [auth], async (req, res) => {
 
    /* try {*/
-        const { nombre, precio, step, descripcion } = req.body;
-        const icon = req.files.icono;
+    const { nombre, precio, step, descripcion } = req.body;
+    const icon = req.files.icono;
 
         /*let nombreCortado = icon.name.split(".");
         let extension = nombreCortado[nombreCortado.length - 1];
@@ -79,25 +79,22 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             }
         });*/
 
-        cloudinary.v2.uploader.upload(icon,(error,result)=>{
-            if(error) return res.status(500).json({mensaje:"Error interno en servidor al subir imagen: " + err,status:false})
-
-            const nuevaOpcion = new Opcion({
-                nombre,
-                step,
-                descripcion,
-                icono: result.secure_url,
-                precio
+    cloudinary.uploader.upload_stream((err,result) =>{
+        const nuevaOpcion = new Opcion({
+            nombre,
+            step,
+            descripcion,
+            icono: result.secure_url,
+            precio
+        });
+        nuevaOpcion.save((err,nOpcion)=>{
+            if(err) return res.status(500).json({mensaje:"Error interno en servidor al guardar opcion: " + err,status:false})
+            res.json({
+                opcion: nOpcion,
+                status: true
             });
-            nuevaOpcion.save((err,nOpcion)=>{
-                if(err) return res.status(500).json({mensaje:"Error interno en servidor al guardar opcion: " + err,status:false})
-                res.json({
-                    opcion: nOpcion,
-                    status: true
-                });
-            });
-
-        })
+        });
+    }).end(icon)
 
 
     /*} catch (err) {
