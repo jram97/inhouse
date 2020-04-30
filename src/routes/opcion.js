@@ -65,7 +65,7 @@ router.get("/ws/opciones/:id", async (req, res) => {
 
 router.post("/ws/opciones", [auth], async (req, res) => {
 
-    try {
+   /* try {*/
         const { nombre, precio, step, descripcion } = req.body;
         const icon = req.files.icono;
 
@@ -100,12 +100,12 @@ router.post("/ws/opciones", [auth], async (req, res) => {
         })
 
 
-    } catch (err) {
+    /*} catch (err) {
         res.json({
             mensaje: err,
             status: false
         });
-    }
+    }*/
 });
 
 router.put("/ws/opciones", [auth], async (req, res) => {
