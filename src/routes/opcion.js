@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 const Opcion = require("../model/Opcion");
 const { auth } = require("../lib/util");
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary');
 cloudinary.config({
     cloud_name: 'dxmoev2hb',
     api_key: '644335251315747',
@@ -79,7 +79,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             }
         });*/
 
-        cloudinary.uploader.upload(icon,{public_id:"inhouse/"},(error,result)=>{
+        cloudinary.v2.uploader.upload(icon,(error,result)=>{
             if(error) return res.status(500).json({mensaje:"Error interno en servidor al subir imagen: " + err,status:false})
 
             const nuevaOpcion = new Opcion({
