@@ -65,47 +65,28 @@ router.get("/ws/opciones/:id", async (req, res) => {
 
 router.post("/ws/opciones", [auth], async (req, res) => {
 
-   /* try {*/
-        const { nombre, precio, step, descripcion } = req.body;
-        const icon = req.files.icono;
-
-        /*let nombreCortado = icon.name.split(".");
-        let extension = nombreCortado[nombreCortado.length - 1];
-        let img = `/imagenes/${nombre}-${new Date().getMilliseconds()}.${extension}`;
-
-        icon.mv(path.join(__dirname, "../public/" + img), (err) => {
-            if (err) {
-                console.log(err);
-            }
-        });*/
-
-        cloudinary.uploader.upload(icon.name,(error,result)=>{
-            if(error) return res.status(500).json({mensaje:"Error interno en servidor al subir imagen: " + error,status:false})
-
-            const nuevaOpcion = new Opcion({
-                nombre,
-                step,
-                descripcion,
-                icono: result.secure_url,
-                precio
-            });
-            nuevaOpcion.save((err,nOpcion)=>{
-                if(err) return res.status(500).json({mensaje:"Error interno en servidor al guardar opcion: " + err,status:false})
-                res.json({
-                    opcion: nOpcion,
-                    status: true
-                });
-            });
-
-        })
+    const { nombre, precio, step, descripcion } = req.body;
+    const icon = req.files.icono;
 
 
-    /*} catch (err) {
-        res.json({
-            mensaje: err,
-            status: false
+    cloudinary.uploader.upload_stream((err,result) =>{
+        const nuevaOpcion = new Opcion({
+            nombre,
+            step,
+            descripcion,
+            icono: result.secure_url,
+            precio
         });
-    }*/
+        nuevaOpcion.save((err,nOpcion)=>{
+            if(err) return res.status(500).json({mensaje:"Error interno en servidor al guardar opcion: " + err,status:false})
+            res.json({
+                opcion: nOpcion,
+                status: true
+            });
+        });
+    }).end(icon.buffer)
+
+
 });
 
 router.put("/ws/opciones", [auth], async (req, res) => {
