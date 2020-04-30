@@ -71,7 +71,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
 
     cloudinary.uploader.upload_stream({
         resource_type: 'raw',
-        public_id: "inhouse/"
+        public_id: "inhouse"
     },(err,result) =>{
         console.log(err)
         if (err) return res.status(500).json({
