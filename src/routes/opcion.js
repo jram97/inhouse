@@ -71,9 +71,11 @@ router.post("/ws/opciones", [auth], async (req, res) => {
 
     cloudinary.uploader.upload_stream((err,result) =>{
         if (err) return res.status(500).json({
-            mensaje: "Error interno en servidor al subir imagen: " + err,
+            mensaje: "Error interno en servidor al subir imagen: ",
             status: false
         })
+        console.log(icon)
+        console.log(err)
         const nuevaOpcion = new Opcion({
             nombre,
             step,
