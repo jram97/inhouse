@@ -4,6 +4,13 @@ const express = require("express");
 const router = express.Router();
 const Opcion = require("../model/Opcion");
 const { auth } = require("../lib/util");
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: 'dxmoev2hb',
+    api_key: '644335251315747',
+    api_secret: 't4jxKvIosZ00j9sqzn3x3yG7CzA'
+});
+
 
 router.get("/ws/opciones-admin", async (req, res) => {
     try {
@@ -62,7 +69,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
         const { nombre, precio, step, descripcion } = req.body;
         const icon = req.files.icono;
 
-        let nombreCortado = icon.name.split(".");
+        /*let nombreCortado = icon.name.split(".");
         let extension = nombreCortado[nombreCortado.length - 1];
         let img = `/imagenes/${nombre}-${new Date().getMilliseconds()}.${extension}`;
 
@@ -70,19 +77,28 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             if (err) {
                 console.log(err);
             }
-        });
-        const nuevaOpcion = new Opcion({
-            nombre,
-            step,
-            descripcion,
-            icono: img,
-            precio
-        });
-        await nuevaOpcion.save();
-        res.json({
-            opcion: nuevaOpcion,
-            status: true
-        });
+        });*/
+
+        cloudinary.uploader.upload(icon,{public_id:"inhouse/"},(error,result)=>{
+            if(error) return res.status(500).json({mensaje:"Error interno en servidor al subir imagen: " + err,status:false})
+
+            const nuevaOpcion = new Opcion({
+                nombre,
+                step,
+                descripcion,
+                icono: result.secure_url,
+                precio
+            });
+            nuevaOpcion.save((err,nOpcion)=>{
+                if(err) return res.status(500).json({mensaje:"Error interno en servidor al guardar opcion: " + err,status:false})
+                res.json({
+                    opcion: nuevaOpcion,
+                    status: true
+                });
+            });
+
+        })
+
 
     } catch (err) {
         res.json({
