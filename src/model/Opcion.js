@@ -16,6 +16,10 @@ const OpcionSchema = new Schema({
         type: String,
         required: false
     },
+    tiempo: {
+        type: Number,
+        required: false
+    },
     precio: {
         type: Number,
         required: false
