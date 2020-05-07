@@ -14,6 +14,10 @@ const UsuarioSchema = new Schema({
         required: false,
         unique: true
     },
+    rol: {
+        type: String,
+        required: false
+    },
     pass: {
         type: String,
         required: false,

@@ -8,6 +8,11 @@ const CotizadorSchema = new Schema({
         ref: 'Opcion',
         require: false
     }],
+    secciones: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Seccion',
+        require: false
+    }],
     solicita: {
         empresa: {
             type: String,

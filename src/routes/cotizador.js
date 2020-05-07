@@ -7,7 +7,7 @@ var utils = require("../lib/util");
 router.get('/ws/cotizador-admin', async (req, res) => {
     try {
         const count = await Cotizador.find({}).count();
-        const cotizador = await Cotizador.find({}).populate("opciones");
+        const cotizador = await Cotizador.find({}).populate("opciones").populate("secciones");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -25,7 +25,7 @@ router.get('/ws/cotizador-admin', async (req, res) => {
 router.get('/ws/cotizador', async (req, res) => {
     try {
         const count = await Cotizador.find({ status: true }).count();
-        const cotizador = await Cotizador.find({ status: true }).populate("opciones");
+        const cotizador = await Cotizador.find({ status: true }).populate("opciones").populate("secciones");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -41,17 +41,17 @@ router.get('/ws/cotizador', async (req, res) => {
 
 router.post('/ws/cotizador', async (req, res) => {
     try {
-        const { opciones, empresa, email } = req.body;
+        const { opciones, secciones, empresa, email } = req.body;
         const nuevaCotizacion = new Cotizador({
-            opciones: opciones, solicita: {
+            opciones: opciones, secciones: secciones, solicita: {
                 empresa: empresa,
                 email: email
             }
         });
 
         try {
-            utils.createPdf(email);
-            utils.sendCotizacion(email)
+            /*utils.createPdf(email);
+            utils.sendCotizacion(email)*/
 
             await nuevaCotizacion.save();
             res.json({

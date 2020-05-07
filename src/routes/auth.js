@@ -25,6 +25,31 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.post("/ws/auth/register", async (req, res) => {
+
+    const { nombre_completo, user, pass, rol } = req.body;
+
+    const exist = await Usuario.findOne({ user: user })
+    if (!exist) {
+        const nuevaData = new Usuario({
+            nombre_completo: nombre_completo,
+            rol: rol,
+            user: usuario
+        });
+        nuevaData.pass = await nuevaData.encryptPassword(pass);
+        const userNew = await nuevaData.save();
+        res.json({
+            mensaje: userNew,
+            status: true
+        });
+    } else {
+        res.json({
+            mensaje: 'Este nombre de usuario ya existe, no es posible registrarlo',
+            status: false
+        });
+    }
+});
+
 router.post('/ws/auth', async (req, res) => {
     try {
         const { user, pass } = req.body;
