@@ -82,7 +82,7 @@ util.sendCotizacion = (email) => {
             secure: true,
             auth: {
                 user: "jbarillasramirez@gmail.com",
-                pass: "xxxxx"
+                pass: "xxxxxx"
             }
         });
 
