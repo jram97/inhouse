@@ -40,7 +40,6 @@ router.get('/ws/cotizador', async (req, res) => {
 })
 
 router.post('/ws/cotizador', async (req, res) => {
-    try {
         const { opciones, secciones, empresa, email } = req.body;
         const nuevaCotizacion = new Cotizador({
             opciones: opciones, secciones: secciones, solicita: {
@@ -56,12 +55,6 @@ router.post('/ws/cotizador', async (req, res) => {
             cotizacion: nuevaCotizacion,
             status: true
         });
-    } catch (err) {
-        res.json({
-            mensaje: "Error al guardar y enviar la cotización",
-            status: false
-        });
-    }
 })
 
 
