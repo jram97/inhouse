@@ -48,25 +48,17 @@ router.post('/ws/cotizador', async (req, res) => {
                 email: email
             }
         });
+        /*utils.createPdf(email);
+        utils.sendCotizacion(email)*/
 
-        try {
-            /*utils.createPdf(email);
-            utils.sendCotizacion(email)*/
-
-            await nuevaCotizacion.save();
-            res.json({
-                cotizacion: nuevaCotizacion,
-                status: true
-            });
-        } catch (err) {
-            res.json({
-                mensaje: "Error al guardar y enviar la cotización",
-                status: false
-            });
-        }
+        await nuevaCotizacion.save();
+        res.json({
+            cotizacion: nuevaCotizacion,
+            status: true
+        });
     } catch (err) {
         res.json({
-            mensaje: err,
+            mensaje: "Error al guardar y enviar la cotización",
             status: false
         });
     }

@@ -34,7 +34,7 @@ router.post("/ws/auth/register", async (req, res) => {
         const nuevaData = new Usuario({
             nombre_completo: nombre_completo,
             rol: rol,
-            user: usuario
+            user: user
         });
         nuevaData.pass = await nuevaData.encryptPassword(pass);
         const userNew = await nuevaData.save();
