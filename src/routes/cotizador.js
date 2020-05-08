@@ -4,7 +4,7 @@ const Cotizador = require("../model/Cotizador");
 const { auth } = require("../lib/util");
 var utils = require("../lib/util");
 
-router.get('/ws/cotizador-admin', async (req, res) => {
+router.get('/ws/cotizador-admin', auth, async (req, res) => {
     try {
         const count = await Cotizador.find({}).count();
         const cotizador = await Cotizador.find({}).populate("opciones").populate("secciones");
@@ -50,9 +50,9 @@ router.post('/ws/cotizador', async (req, res) => {
         /*utils.createPdf(email);
         utils.sendCotizacion(email)*/
 
-        await nuevaCotizacion.save();
+        const envio = await nuevaCotizacion.save();
         res.json({
-            cotizacion: nuevaCotizacion,
+            cotizacion: envio,
             status: true
         });
 })

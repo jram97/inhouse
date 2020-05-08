@@ -71,7 +71,7 @@ router.post('/ws/auth', async (req, res) => {
                         expiresIn: 15440
                     });
                     res.json({
-                        user: userDB.user,
+                        user: userDB,
                         mensaje: 'Autenticacion existosa',
                         status: true,
                         token: token
