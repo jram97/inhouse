@@ -101,15 +101,13 @@ router.put("/ws/opciones", [auth], async (req, res) => {
         try {
             const { id, step, nombre, precio, descripcion } = req.body;
             const icon = req.files.icono;
-            cloudinary.uploader.upload_stream({
-                folder: "inhouse"
-            },(err,result) =>{
+            cloudinary.uploader.upload_stream({folder: "inhouse"},(err,result) =>{
                 if (err) return res.status(500).json({
                     mensaje: "Error interno en servidor al subir imagen: ",
                     status: false
                 })
                 console.log(result)
-                tOpcion = {
+                let tOpcion = {
                     nombre,
                     step,
                     descripcion,
@@ -119,6 +117,10 @@ router.put("/ws/opciones", [auth], async (req, res) => {
                 Opcion.findByIdAndUpdate(id, tOpcion, (err, uOpcion) => {
                     if (error) return res.status(500).json({
                         mensaje: "Error interno en servidor al editar opcion: " + err,
+                        status: false
+                    })
+                    if(!uOpcion)return res.status(500).json({
+                        mensaje: "Opcion no encontrada id no existe",
                         status: false
                     })
                     res.json({
