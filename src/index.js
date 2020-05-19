@@ -29,6 +29,7 @@ app.use(require('./routes/seccion'));
 app.use(require('./routes/opcion'));
 app.use(require('./routes/servicio'));
 app.use(require('./routes/cotizador'));
+app.use(require('./routes/users'));
 
 // Public
 app.use(express.static(path.join(__dirname, './public')));
