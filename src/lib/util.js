@@ -119,4 +119,47 @@ util.sendCotizacion = (email) => {
     }
 }
 
+util.welcome = (nombre, email, pass, rol) => {
+    try {
+        let transporter = nodeMailer.createTransport({
+            service: "Hotmail",
+            auth: {
+                user: "jbarillasramirez@hotmail.com",
+                pass: "thoneonejhbr1"
+            }
+        });
+
+        const URL = "https://www.solucionesroots.com/"
+
+        let mailOptions = {
+            from: "jbarillasramirez@hotmail.com",
+            replyTo: "no-reply@solucionesroots.com",
+            to: email,
+            subject: "Bienvenid@ a Inhouse de Soluciones Roots SV✔!",
+            html: `<p style="font-size: 16px;color: #808080"">¡Querido ${nombre}!<p>
+                    <p style="font-size: 15px;color: #808080; line-height: 1.5;">Te saludamos de parte de Inhouse<br>
+                    Te enviamos este correo debido a que tu cuenta a sido creada con exito, con el rol de: ${rol}</p><br>
+                    <p style="font-size: 12px;color: #808080">Tus credenciales son: </p>
+                    <p style="font-size: 15px;color: #808080; line-height: 1.5;">Email: ${email} <br> Password: ${pass}</p><br>
+                    <p style="font-size: 15px;color: #808080; line-height: 1.5;">Te invitamos a iniciar sesion en el siguiente enlace. ${URL} </p><br>
+
+                    <p style="font-size: 12px;color: #808080">Att: Equipo de Soluciones Roots</p>`
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            console.log(
+                "Message %s sent: %s",
+                info.messageId,
+                info.response
+            );
+        });
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
+
 module.exports = util;

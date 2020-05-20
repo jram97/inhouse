@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../model/Usuario");
 const { auth } = require("../lib/util");
-var utils = require("../lib/util");
 
 router.get('/ws/usuarios/:tipo', auth, async (req, res) => {
     try {

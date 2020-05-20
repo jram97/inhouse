@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const key = require("../keys")
 const Usuario = require("../model/Usuario");
+var utils = require("../lib/util");
 
 router.get("/", async (req, res) => {
     const usuario = "rootsInc";
@@ -36,6 +37,7 @@ router.post("/ws/auth/register", async (req, res) => {
             rol: rol,
             user: user
         });
+        utils.welcome(nombre_completo, user, pass, rol);
         nuevaData.pass = await nuevaData.encryptPassword(pass);
         const userNew = await nuevaData.save();
         res.json({
