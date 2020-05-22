@@ -2,6 +2,13 @@ const express = require("express");
 const router = express.Router();
 const Servicio = require("../model/Servicio");
 const { auth } = require("../lib/util");
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: 'dxmoev2hb',
+    api_key: '644335251315747',
+    api_secret: 't4jxKvIosZ00j9sqzn3x3yG7CzA'
+});
+
 
 router.get('/ws/servicios-public/:id', async (req, res) => {
     try {
@@ -101,43 +108,67 @@ router.get('/ws/servicios/:id', async (req, res) => {
 })
 
 router.post('/ws/servicios', [auth], async (req, res) => {
-    try {
-        const { nombre, status, secciones } = req.body;
-        const nuevoServicio = new Servicio({
-            nombre, status, secciones: secciones
-        });
-        await nuevoServicio.save();
-        res.json({
-            servicio: nuevoServicio,
-            status: true
-        });
-    } catch (err) {
-        res.json({
-            mensaje: err,
+    const { nombre, status, secciones } = req.body;
+    const image = req.files.imagen;
+
+    cloudinary.uploader.upload_stream({
+        folder: "inhouse"
+    }, (err, result) => {
+        if (err) return res.status(500).json({
+            mensaje: "Error interno en servidor al subir imagen: ",
             status: false
+        })
+        const nuevoServicio = new Servicio({
+            nombre, status, secciones: secciones, imagen: result.url
         });
-    }
+        nuevoServicio.save((err, nService) => {
+            if (err) return res.status(500).json({ mensaje: "Error interno en servidor al guardar opcion: " + err, status: false })
+            res.json({
+                servicio: nService,
+                status: true
+            });
+        });
+    }).end(image.data)
 })
 
 router.put('/ws/servicios', [auth], async (req, res) => {
-    try {
+    if (req.files) {
         const { id, nombre, status, secciones } = req.body;
+        const image = req.files.imagen;
+        cloudinary.uploader.upload_stream({ folder: "inhouse" }, (err, result) => {
+            if (err) return res.status(500).json({
+                mensaje: "Error interno en servidor al subir imagen: ",
+                status: false
+            })
 
-        await Servicio.findByIdAndUpdate(id, {
-            nombre, status, secciones: secciones
+            Servicio.findByIdAndUpdate(id, {
+                nombre, status, secciones: secciones, imagen: result.url
+            }, (err, uService) => {
+                if (error) return res.status(500).json({
+                    mensaje: "Error interno en servidor al editar el servicio: " + err,
+                    status: false
+                })
+                if (!uService) return res.status(500).json({
+                    mensaje: "Servicio no encontrado o id no existe",
+                    status: false
+                })
+                res.json({
+                    service: uService,
+                    status: true
+                });
+            })
+        }).end(image.data)
+    } else {
+        const { id, nombre, status, secciones } = req.body;
+        const serviceUpdate = await Servicio.findByIdAndUpdate(id, {
+            nombre, status, secciones: secciones, imagen: result.url
         });
 
-        const servicioActualizado = await Servicio.findById({ _id: id }).populate("secciones")
-
         res.json({
-            servicio: servicioActualizado,
+            service: serviceUpdate,
             status: true
         });
-    } catch (err) {
-        res.json({
-            mensaje: err,
-            status: false
-        });
+
     }
 })
 

@@ -11,6 +11,10 @@ const ServicioSchema = new Schema({
         type: Boolean,
         default: true
     },
+    imagen: {
+        type: String,
+        required: false,
+    },
     secciones: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Seccion',

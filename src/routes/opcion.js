@@ -76,7 +76,6 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             mensaje: "Error interno en servidor al subir imagen: ",
             status: false
         })
-        console.log(result)
         const nuevaOpcion = new Opcion({
             nombre,
             step,
@@ -106,7 +105,6 @@ router.put("/ws/opciones", [auth], async (req, res) => {
                     mensaje: "Error interno en servidor al subir imagen: ",
                     status: false
                 })
-                console.log(result)
                 let tOpcion = {
                     nombre,
                     step,
