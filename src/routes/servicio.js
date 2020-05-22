@@ -161,7 +161,7 @@ router.put('/ws/servicios', [auth], async (req, res) => {
     } else {
         const { id, nombre, status, secciones } = req.body;
         const serviceUpdate = await Servicio.findByIdAndUpdate(id, {
-            nombre, status, secciones: secciones, imagen: result.url
+            nombre, status, secciones: secciones
         });
 
         res.json({
