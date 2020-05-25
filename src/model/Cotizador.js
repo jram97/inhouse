@@ -23,6 +23,14 @@ const CotizadorSchema = new Schema({
             require: false
         }
     },
+    oferta: {
+        type: String,
+        require: false
+    },
+    tiempo_realizacion: {
+        type: String,
+        require: false
+    },
     fecha: {
         type: Date,
         default: Date.now

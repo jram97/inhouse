@@ -65,7 +65,7 @@ router.get("/ws/opciones/:id", async (req, res) => {
 
 router.post("/ws/opciones", [auth], async (req, res) => {
 
-    const { nombre, precio, step, descripcion } = req.body;
+    const { nombre, precio, step, descripcion, tiempo } = req.body;
     const icon = req.files.icono;
 
 
@@ -80,6 +80,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
             nombre,
             step,
             descripcion,
+            tiempo,
             icono: result.url,
             precio
         });
@@ -98,7 +99,7 @@ router.post("/ws/opciones", [auth], async (req, res) => {
 router.put("/ws/opciones", [auth], async (req, res) => {
     if (req.files) {
         try {
-            const { id, step, nombre, precio, descripcion } = req.body;
+            const { id, step, nombre, precio, tiempo, descripcion } = req.body;
             const icon = req.files.icono;
             cloudinary.uploader.upload_stream({folder: "inhouse"},(err,result) =>{
                 if (err) return res.status(500).json({
@@ -108,6 +109,7 @@ router.put("/ws/opciones", [auth], async (req, res) => {
                 let tOpcion = {
                     nombre,
                     step,
+                    tiempo,
                     descripcion,
                     icono: result.url,
                     precio
@@ -137,12 +139,13 @@ router.put("/ws/opciones", [auth], async (req, res) => {
 
     } else {
         try {
-            const { id, step, nombre, precio, descripcion } = req.body;
+            const { id, step, nombre, precio, descripcion, tiempo } = req.body;
             const opcionActualizada = await Opcion.findByIdAndUpdate(id, {
                 nombre,
                 step,
                 descripcion,
-                precio
+                precio,
+                tiempo
             })
             res.json({
                 opcion: opcionActualizada,
