@@ -31,6 +31,10 @@ const CotizadorSchema = new Schema({
         type: String,
         require: false
     },
+    precio_total: {
+        type: String,
+        require: false
+    },
     fecha: {
         type: Date,
         default: Date.now

@@ -40,15 +40,13 @@ router.get('/ws/cotizador', async (req, res) => {
 })
 
 router.post('/ws/cotizador', async (req, res) => {
-        const { opciones, secciones, empresa, email, oferta, tiempo_realizacion } = req.body;
+        const { opciones, secciones, precio_total, empresa, email, oferta, tiempo_realizacion } = req.body;
         const nuevaCotizacion = new Cotizador({
             opciones: opciones, secciones: secciones, solicita: {
                 empresa: empresa,
                 email: email
-            }, oferta, tiempo_realizacion
+            }, oferta, tiempo_realizacion, precio_total
         });
-        /*utils.createPdf(email);
-        utils.sendCotizacion(email)*/
 
         const envio = await nuevaCotizacion.save();
         res.json({
