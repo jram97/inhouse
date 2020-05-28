@@ -7,7 +7,7 @@ var utils = require("../lib/util");
 router.get('/ws/cotizador-admin', auth, async (req, res) => {
     try {
         const count = await Cotizador.find({}).count();
-        const cotizador = await Cotizador.find({}).populate("opciones").populate("secciones");
+        const cotizador = await Cotizador.find({}).populate("opciones").populate("secciones").populate("usuario");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -21,11 +21,27 @@ router.get('/ws/cotizador-admin', auth, async (req, res) => {
     }
 })
 
+router.get('/ws/cotizador/:id', async (req, res) => {
+    try {
+        const count = await Cotizador.find({ status: true }).count();
+        const cotizador = await Cotizador.find({ usuario: req.params.id }).populate("opciones").populate("secciones").populate("usuario");
+        res.json({
+            cotizador: cotizador,
+            status: true,
+            cantidad: count
+        });
+    } catch (err) {
+        res.json({
+            mensaje: err,
+            status: false
+        });
+    }
+})
 
 router.get('/ws/cotizador', async (req, res) => {
     try {
         const count = await Cotizador.find({ status: true }).count();
-        const cotizador = await Cotizador.find({ status: true }).populate("opciones").populate("secciones");
+        const cotizador = await Cotizador.find({ status: true }).populate("opciones").populate("secciones").populate("usuario");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -40,9 +56,9 @@ router.get('/ws/cotizador', async (req, res) => {
 })
 
 router.post('/ws/cotizador', async (req, res) => {
-        const { opciones, secciones, precio_total, empresa, email, oferta, tiempo_realizacion } = req.body;
+        const { opciones, secciones, precio_total, usuario, empresa, email, oferta, tiempo_realizacion } = req.body;
         const nuevaCotizacion = new Cotizador({
-            opciones: opciones, secciones: secciones, solicita: {
+            opciones: opciones, secciones: secciones, usuario, solicita: {
                 empresa: empresa,
                 email: email
             }, oferta, tiempo_realizacion, precio_total
