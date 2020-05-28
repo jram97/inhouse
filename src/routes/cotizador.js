@@ -7,7 +7,7 @@ var utils = require("../lib/util");
 router.get('/ws/cotizador-admin', auth, async (req, res) => {
     try {
         const count = await Cotizador.find({}).count();
-        const cotizador = await Cotizador.find({}).populate("opciones").populate("secciones").populate("usuario");
+        const cotizador = await Cotizador.find({}).populate("opciones").populate("secciones").populate("usuario").populate("proyecto");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -24,7 +24,7 @@ router.get('/ws/cotizador-admin', auth, async (req, res) => {
 router.get('/ws/cotizador/:id', async (req, res) => {
     try {
         const count = await Cotizador.find({ status: true }).count();
-        const cotizador = await Cotizador.find({ usuario: req.params.id }).populate("opciones").populate("secciones").populate("usuario");
+        const cotizador = await Cotizador.find({ usuario: req.params.id }).populate("opciones").populate("secciones").populate("usuario").populate("proyecto");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -41,7 +41,7 @@ router.get('/ws/cotizador/:id', async (req, res) => {
 router.get('/ws/cotizador', async (req, res) => {
     try {
         const count = await Cotizador.find({ status: true }).count();
-        const cotizador = await Cotizador.find({ status: true }).populate("opciones").populate("secciones").populate("usuario");
+        const cotizador = await Cotizador.find({ status: true }).populate("opciones").populate("secciones").populate("usuario").populate("proyecto");
         res.json({
             cotizador: cotizador,
             status: true,
@@ -56,9 +56,9 @@ router.get('/ws/cotizador', async (req, res) => {
 })
 
 router.post('/ws/cotizador', async (req, res) => {
-        const { opciones, secciones, precio_total, usuario, empresa, email, oferta, tiempo_realizacion } = req.body;
+        const { opciones, secciones, precio_total, usuario, proyecto, empresa, email, oferta, tiempo_realizacion } = req.body;
         const nuevaCotizacion = new Cotizador({
-            opciones: opciones, secciones: secciones, usuario, solicita: {
+            opciones: opciones, secciones: secciones, usuario, proyecto, solicita: {
                 empresa: empresa,
                 email: email
             }, oferta, tiempo_realizacion, precio_total

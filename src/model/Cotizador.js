@@ -18,6 +18,11 @@ const CotizadorSchema = new Schema({
         ref: 'Usuario',
         require: false
     },
+    proyecto: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Proyecto',
+        require: false
+    },
     solicita: {
         empresa: {
             type: String,
