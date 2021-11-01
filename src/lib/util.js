@@ -81,8 +81,8 @@ util.sendCotizacion = (email) => {
             port: 465,
             secure: true,
             auth: {
-                user: "jbarillasramirez@gmail.com",
-                pass: "xxxxxx"
+                user: "email@mail.com",
+                pass: "xxxx"
             }
         });
 
@@ -124,15 +124,15 @@ util.welcome = (nombre, email, pass, rol) => {
         let transporter = nodeMailer.createTransport({
             service: "Hotmail",
             auth: {
-                user: "jbarillasramirez@hotmail.com",
-                pass: "thoneonejhbr1"
+                user: "email@mail.com",
+                pass: "xxxx"
             }
         });
 
         const URL = "https://www.solucionesroots.com/"
 
         let mailOptions = {
-            from: "jbarillasramirez@hotmail.com",
+            from: "email@mail.com",
             replyTo: "no-reply@solucionesroots.com",
             to: email,
             subject: "Bienvenid@ a Inhouse de Soluciones Roots SV✔!",
